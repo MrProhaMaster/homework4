@@ -7,6 +7,12 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
+    def __lt__(self, other):
+        if not isinstance(other, Student):
+            print('Не студент!')
+            return
+        return self.__medium_mark__() < other.__medium_mark__()
+
     def __medium_mark__(self):
         summ = 0
         for i in self.grades:
@@ -42,6 +48,12 @@ class Lecturer(Mentor):
         courses_attached = []
         self.lectures = {}
 
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            print('Не лектор!')
+            return
+        return self.__medium_mark__() < other.__medium_mark__()
+
     def __medium_mark__(self):
         summ = 0
         for i in self.lectures:
@@ -71,6 +83,7 @@ class Reviewer(Mentor):
 
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
+best_student.finished_courses += ['GIT']
 
 cool_mentor = Reviewer('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
@@ -78,6 +91,9 @@ cool_mentor.courses_attached += ['Python']
 cool_lecturer = Lecturer('Some', 'Person')
 cool_lecturer.courses_attached += ['Python']
 
+normal_lecturer = Lecturer('No', 'Name')
+normal_lecturer.courses_attached += ['Python']
+
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
@@ -86,7 +102,12 @@ best_student.rate_L(cool_lecturer, 'Python', 10)
 best_student.rate_L(cool_lecturer, 'Python', 10)
 best_student.rate_L(cool_lecturer, 'Python', 10)
 
-print(best_student.grades)
-print(cool_lecturer.lectures)
-print(cool_lecturer)
-print(best_student)
+best_student.rate_L(normal_lecturer, 'Python', 7)
+best_student.rate_L(normal_lecturer, 'Python', 8)
+best_student.rate_L(normal_lecturer, 'Python', 6)
+
+#print(best_student.grades)
+#print(cool_lecturer.lectures)
+#print(cool_lecturer)
+#print(best_student)
+print(cool_lecturer.__lt__(normal_lecturer))
