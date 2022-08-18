@@ -19,9 +19,11 @@ class Student:
             summ += sum(self.grades[i])//len(self.grades[i])
         return summ//len(self.grades)
 
+    def __medium_mark_direct__(self, subject):
+        return sum(self.grades[subject])//len(self.grades[subject])
+
     def __str__(self):
-        b = str(self.__medium_mark__())
-        return 'Имя: '+self.name+'\nФамилия: '+self.surname+'\nСредняя оценка за домашние задания: '+b+'\nКурсы в процессе изучения: '+', '.join(self.courses_in_progress)+'\nЗавершенные курсы: '+', '.join(self.finished_courses)+'\n'
+        return 'Имя: '+self.name+'\nФамилия: '+self.surname+'\nСредняя оценка за домашние задания: '+str(self.__medium_mark__())+'\nКурсы в процессе изучения: '+', '.join(self.courses_in_progress)+'\nЗавершенные курсы: '+', '.join(self.finished_courses)+'\n'
 
     def add_courses(self, course_name):
         self.finished_course.append(course_name)
@@ -41,7 +43,6 @@ class Mentor:
         self.surname = surname
         self.courses_attached = []
 
-
 class Lecturer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
@@ -60,9 +61,11 @@ class Lecturer(Mentor):
             summ += sum(self.lectures[i])//len(self.lectures[i])
         return summ//len(self.lectures)
 
+    def __medium_mark_direct__(self, subject):
+        return sum(self.lectures[subject])//len(self.lectures[subject])
+
     def __str__(self):
-        b = str(self.__medium_mark__())
-        return 'Имя: '+self.name+'\nФамилия '+self.surname+'\nСредняя оценка за лекции: '+b+'\n'
+        return 'Имя: '+self.name+'\nФамилия '+self.surname+'\nСредняя оценка за лекции: '+str(self.__medium_mark__())+'\n'
 
 class Reviewer(Mentor):
     def __init__(self, name, surname):
@@ -81,9 +84,37 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
+def comparison_s(students, subject):
+    summ = 0
+    c = 0
+    for student in students:
+        if subject in student.grades:
+            summ += student.__medium_mark_direct__(subject)
+            c += 1
+    return summ//c
+
+def comparison_l(lecutrers, subject):
+    summ = 0
+    c = 0
+    for lecturer in lecutrers:
+        if subject in lecturer.lectures:
+            summ += lecturer.__medium_mark_direct__(subject)
+            c += 1
+    return summ // c
+
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 best_student.finished_courses += ['GIT']
+
+normal_student = Student('Ben', 'Stark', 'your_gender')
+normal_student.courses_in_progress += ['Python']
+normal_student.finished_courses += ['GIT']
+
+bad_student = Student('Tony', 'Parker', 'your_gender')
+bad_student.courses_in_progress += ['GIT']
+bad_student.finished_courses += ['']
+
+students = [best_student, normal_student, bad_student]
 
 cool_mentor = Reviewer('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
@@ -94,9 +125,19 @@ cool_lecturer.courses_attached += ['Python']
 normal_lecturer = Lecturer('No', 'Name')
 normal_lecturer.courses_attached += ['Python']
 
+lecturers = [cool_lecturer, normal_lecturer]
+
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
+
+cool_mentor.rate_hw(normal_student, 'Python', 9)
+cool_mentor.rate_hw(normal_student, 'Python', 8)
+cool_mentor.rate_hw(normal_student, 'Python', 7)
+
+cool_mentor.rate_hw(bad_student, 'GIT', 6)
+cool_mentor.rate_hw(bad_student, 'GIT', 4)
+cool_mentor.rate_hw(bad_student, 'GIT', 5)
 
 best_student.rate_L(cool_lecturer, 'Python', 10)
 best_student.rate_L(cool_lecturer, 'Python', 10)
@@ -110,4 +151,6 @@ best_student.rate_L(normal_lecturer, 'Python', 6)
 #print(cool_lecturer.lectures)
 #print(cool_lecturer)
 #print(best_student)
-print(cool_lecturer.__lt__(normal_lecturer))
+#print(cool_lecturer.__lt__(normal_lecturer))
+print(comparison_s(students, 'Python'))
+print(comparison_l(lecturers, 'Python'))
